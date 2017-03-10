@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/tan_background"
+    android:minHeight="@dimen/list_item_height">
+
+    <ImageView
+        android:layout_width="@dimen/list_item_height"
+        android:layout_height="@dimen/list_item_height"
+        android:id="@+id/image"/>
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/list_item_height"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+    <TextView
+        style="@style/WordStyle"
+        android:textStyle="bold"
+        android:gravity="bottom"
+        android:id="@+id/miwokWord"/>
+
+    <TextView
+        style="@style/WordStyle"
+        android:gravity="top"
+        android:id="@+id/englishNumber"/>
+
+</LinearLayout>
+
+    <ImageView
+        android:id="@+id/play"
+        android:src="@mipmap/play_button"
+        android:padding="@dimen/play_image_padding"
+        android:layout_width="@dimen/list_item_height"
+        android:layout_height="@dimen/list_item_height"
+        />
+
+</LinearLayout>
