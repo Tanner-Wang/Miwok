@@ -1,10 +1,9 @@
 package com.example.administrator.miwok;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,46 +12,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView numbers = (TextView) findViewById(R.id.numbers);
-        numbers.setOnClickListener( new View.OnClickListener(){
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        WordFragmentPagerAdapter wfpa = new WordFragmentPagerAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(wfpa);
 
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this,NumbersActivity.class);
-            startActivity(intent);
-            }
-        });
-
-        TextView family = (TextView) findViewById(R.id.family);
-        family.setOnClickListener( new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this,FamilyActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        TextView colors = (TextView) findViewById(R.id.colors);
-        colors.setOnClickListener( new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this,ColorsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        TextView phrases = (TextView) findViewById(R.id.phrases);
-        phrases.setOnClickListener( new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this,PhrasesActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 }
