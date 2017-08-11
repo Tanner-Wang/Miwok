@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:drawSelectorOnTop="true"
-    tools:context="com.example.administrator.miwok.NumbersActivity"/>
+    tools:context="com.example.administrator.miwok.MainActivity"/>
 
 
