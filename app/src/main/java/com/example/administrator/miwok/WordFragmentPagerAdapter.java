@@ -3,13 +3,13 @@ package com.example.administrator.miwok;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Created by Administrator on 2017/6/11.
  */
 
-public class WordFragmentPagerAdapter extends FragmentPagerAdapter {
+public class WordFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private Context mContext;
 
