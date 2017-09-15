@@ -18,7 +18,7 @@ public class WordsAdapter extends ArrayAdapter<Word> {
 
     private int playImageBackGroundId;
 
-
+    ViewHolder viewHolder;
 
     public WordsAdapter(Activity context, ArrayList<Word> words, int colorResourceId, int playBackGround) {
         super(context, 0, words);
@@ -30,40 +30,51 @@ public class WordsAdapter extends ArrayAdapter<Word> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.image);
+            viewHolder.textContainer = convertView.findViewById(R.id.text_container);
+            viewHolder.miwokTextView = (TextView) convertView.findViewById(R.id.miwokWord);
+            viewHolder.englishTextView = (TextView) convertView.findViewById(R.id.englishNumber);
+            viewHolder.imageBackGround = (ImageView) convertView.findViewById(R.id.play);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         final Word currentWord = getItem(position);
 
-        ImageView imageView = (ImageView) listItemView.findViewById(R.id.image);
         if (currentWord.hasImage()) {
 
-            imageView.setVisibility(View.VISIBLE);
-            imageView.setImageResource(currentWord.getImageRes());
+            viewHolder.imageView.setVisibility(View.VISIBLE);
+            viewHolder.imageView.setImageResource(currentWord.getImageRes());
         } else {
-            imageView.setVisibility(View.GONE);
+            viewHolder.imageView.setVisibility(View.GONE);
         }
 
-        View textContainer = listItemView.findViewById(R.id.text_container);
         int color1 = ContextCompat.getColor(getContext(),mColorResourceId);
-        textContainer.setBackgroundColor(color1);
+        viewHolder.textContainer.setBackgroundColor(color1);
 
-        TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwokWord);
-        miwokTextView.setText(currentWord.getMiwokWord());
+        viewHolder.miwokTextView.setText(currentWord.getMiwokWord());
 
-        TextView englishTextView = (TextView) listItemView.findViewById(R.id.englishNumber);
-        englishTextView.setText(currentWord.getEnglishWord());
+        viewHolder.englishTextView.setText(currentWord.getEnglishWord());
 
-        ImageView imageBackGround = (ImageView) listItemView.findViewById(R.id.play);
         int color2 = ContextCompat.getColor(getContext(),playImageBackGroundId);
-        imageBackGround.setBackgroundColor(color2);
+        viewHolder.imageBackGround.setBackgroundColor(color2);
 
-        return listItemView;
+        return convertView;
 
+    }
 
+    static class ViewHolder{
+        private ImageView imageView;
+        private View textContainer;
+        private TextView miwokTextView;
+        private TextView englishTextView;
+        private ImageView imageBackGround;
     }
 
 

@@ -2,22 +2,33 @@ package com.example.administrator.miwok;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NumbersFragment extends Fragment {
+
+    private final String LOAD_BITMAP_URL = "http://android.developer.com/Tanner/picture/001";
 
 
     private MediaPlayer mMediaPlayer;
@@ -52,11 +63,27 @@ public class NumbersFragment extends Fragment {
         }
     };
 
+    LruCache<String, Bitmap> mCache;
+
 
     public NumbersFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //获取内存容量大小
+        int memoryCache = (int) Runtime.getRuntime().maxMemory()/1024;
+        //设置缓存容量上限，为
+        int bitmapCache = memoryCache/8;
+        mCache = new LruCache<String, Bitmap>(bitmapCache){
+            @Override
+            protected int sizeOf(String BitmapName, Bitmap bitmap) {
+                return super.sizeOf(BitmapName, bitmap);
+            }
+        };
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,4 +155,59 @@ public class NumbersFragment extends Fragment {
         }
     }
 
+    private void addBitmap(String BitmapName, Bitmap bitmap){
+        if (mCache.get(BitmapName) != null){
+            mCache.put(BitmapName, bitmap);
+        }
+    }
+
+    private void loadBitmap(String bitmapName) {
+        if (mCache.get(bitmapName) != null) {
+            //TODO: 加载图片
+        }
+        //如果缓存中不存在该图片就触发后台线程进行下载
+        else {
+            new MyAsyncTask().execute(LOAD_BITMAP_URL, bitmapName);
+        }
+    }
+
+        class MyAsyncTask extends AsyncTask<String, Void, Bitmap> {
+
+            @Override
+            protected void onPreExecute() {
+                Toast.makeText(getContext(), "a asynctask is starting.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+            }
+
+            @Override
+            protected void onProgressUpdate(Void... values) {
+                super.onProgressUpdate(values);
+            }
+
+            @Override
+            protected Bitmap doInBackground (String... params){
+                Bitmap mBitmap = null;
+                try {
+                    URL mUrl = new URL(params[0]);
+                    HttpURLConnection connection = (HttpURLConnection) mUrl.openConnection();
+                    connection.setRequestMethod("get");
+                    connection.setReadTimeout(8000);
+                    if (connection.getResponseCode() == 200) {
+                        connection.connect();
+                        InputStream inputStream = connection.getInputStream();
+                    }
+                    connection.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                addBitmap(params[1], mBitmap);
+                return mBitmap;
+
+            }
+        }
 }
