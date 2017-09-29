@@ -35,16 +35,15 @@ public class NumbersFragment extends Fragment {
 
     private AudioManager mAudioManager;
 
-
+    //创建播放监听器，在播放结束时获得通知。
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-
             releaseMediaPlayer();
         }
     };
 
-
+    //创建音频焦点变化监听器，在音频焦点发生改变时获得通知。
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
@@ -63,7 +62,7 @@ public class NumbersFragment extends Fragment {
         }
     };
 
-    LruCache<String, Bitmap> mCache;
+    private LruCache<String, Bitmap> mCache;
 
 
     public NumbersFragment() {
@@ -73,6 +72,9 @@ public class NumbersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取AudioManager对象。
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         //获取内存容量大小
         int memoryCache = (int) Runtime.getRuntime().maxMemory()/1024;
         //设置缓存容量上限，为
@@ -90,8 +92,6 @@ public class NumbersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.word_list,container,false);
 
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-
         final ArrayList<Word> words = new ArrayList<Word>();
         words.add(new Word("lutti","one",R.drawable.number_one,R.raw.number_one));
         words.add(new Word("otiiko","two",R.drawable.number_two,R.raw.number_two));
@@ -104,9 +104,7 @@ public class NumbersFragment extends Fragment {
         words.add(new Word("wo'e","nine",R.drawable.number_nine,R.raw.number_nine));
         words.add(new Word("na'aacha","ten",R.drawable.number_ten,R.raw.number_ten));
 
-
         WordsAdapter adapter = new WordsAdapter(getActivity(), words, R.color.category_numbers,R.color.category_numbers);
-
         ListView itemList = (ListView) rootView.findViewById(R.id.list);
         itemList.setAdapter(adapter);
 
@@ -143,6 +141,9 @@ public class NumbersFragment extends Fragment {
         releaseMediaPlayer();
     }
 
+    /**
+     * 清理MediaPlayer，释放音频焦点
+     */
     private void releaseMediaPlayer() {
 
         if (mMediaPlayer != null) {
@@ -155,18 +156,28 @@ public class NumbersFragment extends Fragment {
         }
     }
 
+    /**
+     * 向图片缓存区存入图片。
+     * @param BitmapName 缓存对象（图片）名称。
+     * @param bitmap 缓存对象（图片）。
+     */
     private void addBitmap(String BitmapName, Bitmap bitmap){
         if (mCache.get(BitmapName) != null){
             mCache.put(BitmapName, bitmap);
         }
     }
 
+    /**
+     * 从图片缓存区读取图片。
+     * @param bitmapName 缓存对象名称。
+     */
     private void loadBitmap(String bitmapName) {
         if (mCache.get(bitmapName) != null) {
             //TODO: 加载图片
         }
         //如果缓存中不存在该图片就触发后台线程进行下载
         else {
+            //如果缓存区不存在所请求的对象，触发一个后台线程进行网络请求和加载。
             new MyAsyncTask().execute(LOAD_BITMAP_URL, bitmapName);
         }
     }

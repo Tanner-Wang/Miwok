@@ -14,11 +14,11 @@ import java.util.ArrayList;
 
 public class WordsAdapter extends ArrayAdapter<Word> {
 
-     private int mColorResourceId;
+    private int mColorResourceId;
 
     private int playImageBackGroundId;
 
-    ViewHolder viewHolder;
+    private ViewHolder viewHolder;
 
     public WordsAdapter(Activity context, ArrayList<Word> words, int colorResourceId, int playBackGround) {
         super(context, 0, words);

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
+    //action操作
     final String SMS_RECEIVER = "android.provider.Telephony.SMS_RECEIVED";
 
     public MyBroadcastReceiver(){}
